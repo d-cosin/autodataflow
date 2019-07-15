@@ -6,6 +6,7 @@ from utils.configuration_files import parse_config_file
 from data_automator import process_datasets
 from ml_automator import process_experiments
 
+
 def validate_parsed_arguments(args):
     ml_config_file = args.ml_config_file
     data_config_file = args.data_config_file

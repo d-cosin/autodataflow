@@ -5,6 +5,9 @@ import yaml
 import numpy as np
 import pandas as pd
 
+from utils.configuration_files import parse_config_file
+
+
 def split_train_test(X, y, train_size):
     n = X.shape[0]
     split_index = int(n*train_size)
@@ -50,13 +53,6 @@ def process_datasets(datasets_setup=None):
         if (dataset["type"] == "time series") and (dataset["sliding_window"]):
             processed_datasets = preprocess_time_series(dataset)
     return processed_datasets
-
-
-# TODO: put this in a helper file because this is replicated code
-def parse_config_file(config_file):
-    with open(config_file, "r") as stream:
-        datasets_setup = yaml.safe_load(stream)
-    return datasets_setup
 
 
 def validate_parsed_arguments(args):

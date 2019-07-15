@@ -5,10 +5,7 @@ import yaml
 import itertools
 
 import constants 
-
-
-from sklearn.datasets import load_boston
-boston = load_boston()
+from utils.configuration_files import parse_config_file
 
 def mount_search_space(experiments_setup):
     search_space = list()
@@ -50,12 +47,6 @@ def extract_estimator_function(experiments_setup):
     for experiment in experiments_setup:
         model_name = experiment["model_name"]
         experiment["model_function"] = constants.MODEL_MAPPER[model_name]
-    return experiments_setup
-
-
-def parse_config_file(config_file):
-    with open(config_file, "r") as stream:
-        experiments_setup = yaml.safe_load(stream)
     return experiments_setup
 
 
