@@ -28,13 +28,22 @@ def mount_search_space(experiments_setup):
     return search_space
 
 
-def execute_ml_experiment(experiments_setup):
+def execute_ml_experiment(experiments_setup, data, dataset_id):
+    results = list()
     search_space = mount_search_space(experiments_setup)
     for grid_point in search_space:
+        single_result = dict()
+        single_result["dataset"] = dataset_id
+        single_result["model"] = grid_point["model_name"]
+        single_result["hyperparameters"] = grid_point["hyperparameters"]
+
         function = grid_point["model_function"]
         hyperparameters = grid_point["hyperparameters"]
-        regressor = function(**hyperparameters).fit(boston.data, boston.target)
-        print(regressor)
+        regressor = function(**hyperparameters).fit(data[0], data[1])
+        single_result["score"] = regressor.score(data[0], data[1])
+
+        results.append(single_result)
+    return results
 
                 
 def extract_estimator_function(experiments_setup):
@@ -65,11 +74,15 @@ def parse_arguments():
     return args  
 
 
+def process_experiments(experiments_setup, data=None, dataset_id=None):
+    experiments_setup = extract_estimator_function(experiments_setup)
+    results = execute_ml_experiment(experiments_setup, data, dataset_id)
+    return results
+
 def main():
     args = parse_arguments()
     experiments_setup = parse_config_file(args.config_file)
-    experiments_setup = extract_estimator_function(experiments_setup)
-    execute_ml_experiment(experiments_setup)
+    process_experiments(experiments_setup)
 
 if __name__ == "__main__":
     main()
