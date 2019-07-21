@@ -37,21 +37,22 @@ def read_dataset(path):
     return df
 
 
-def preprocess_time_series(dataset):
+def preprocess_time_series(dataset_setup):
     processed_time_series = dict()
-    raw_dataset = read_dataset(dataset["path"])
-    raw_ts = raw_dataset[dataset["features"]]
-    for lag in dataset["sliding_window_lags"]:
+    raw_dataset = read_dataset(dataset_setup["path"])
+    raw_ts = raw_dataset[dataset_setup["features"]]
+    for lag in dataset_setup["sliding_window_lags"]:
         X, y = sliding_window(raw_ts, lags=lag)
-        splitted_arrays = split_train_test(X, y, dataset["split_ratio"])
+        splitted_arrays = split_train_test(X, y, dataset_setup["split_ratio"])
         processed_time_series["lag" + str(lag)] = splitted_arrays
     return processed_time_series
 
 
 def process_datasets(datasets_setup=None):
-    for dataset in datasets_setup:
-        if (dataset["type"] == "time series") and (dataset["sliding_window"]):
-            processed_datasets = preprocess_time_series(dataset)
+    for dataset_setup in datasets_setup:
+        if ((dataset_setup["type"] == "time series") and 
+            (dataset_setup["sliding_window"])):
+            processed_datasets = preprocess_time_series(dataset_setup)
     return processed_datasets
 
 
